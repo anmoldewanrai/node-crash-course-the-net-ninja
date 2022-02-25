@@ -2,17 +2,33 @@ const http = require("http");
 const fs = require("fs");
 
 const server = http.createServer((req, res) => {
-  // url and method props on req obj
-  // console.log(req.url, req.method);
-
-  //set header content type
-  // plain text
-  // res.setHeader("Content-type", "text/plain");
-  // html
+  // setting html header
   res.setHeader("Content-type", "text/html");
 
+  // routing using switch
+  let path = "./views/";
+  switch (req.url) {
+    case "/":
+      path += "index.html";
+      // status code
+      res.statusCode = 200; //OK
+      break;
+    case "/about":
+      path += "about.html";
+      res.statusCode = 200;
+      break;
+    case "/about-me":
+      res.setHeader("Location", "/about");
+      res.statusCode = 301; //Redirect
+      break;
+    default:
+      path += "404.html";
+      res.statusCode = 404; //Resource Not Found
+      break;
+  }
+
   // sending html file(s)
-  fs.readFile("./views/index.html", (err, data) => {
+  fs.readFile(path, (err, data) => {
     if (err) {
       console.log(err);
       res.end();
