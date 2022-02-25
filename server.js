@@ -1,4 +1,5 @@
 const http = require("http");
+const fs = require("fs");
 
 const server = http.createServer((req, res) => {
   // url and method props on req obj
@@ -10,14 +11,16 @@ const server = http.createServer((req, res) => {
   // html
   res.setHeader("Content-type", "text/html");
 
-  //write text to send
-  // res.write("hello, ninjas");
-  // write html
-  res.write("<head><link rel='stylesheet' href='#' /></head>");
-  res.write("<p>hello, ninjas</p>");
-
-  //end the response stream
-  res.end();
+  // sending html file(s)
+  fs.readFile("./views/index.html", (err, data) => {
+    if (err) {
+      console.log(err);
+      res.end();
+    } else {
+      // res.write(data);
+      res.end(data);
+    }
+  });
 });
 
 // setting up server to listen for incoming requests
